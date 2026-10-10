@@ -94,3 +94,21 @@ const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{i
   },{threshold:.6});
   counters.forEach(function(c){io.observe(c)});
 })();
+
+/* ---- Loading screen ---- */
+(function(){
+  var loader=document.getElementById('loader');
+  if(!loader) return;
+  var start=Date.now(), done=false;
+  function hide(){
+    if(done) return; done=true;
+    var wait=Math.max(0,1200-(Date.now()-start));
+    setTimeout(function(){
+      loader.classList.add('hide');
+      document.body.classList.remove('is-loading');
+      setTimeout(function(){loader.remove()},700);
+    },wait);
+  }
+  if(document.readyState==='complete') hide(); else window.addEventListener('load',hide);
+  setTimeout(hide,5000);
+})();
