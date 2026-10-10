@@ -2590,3 +2590,26 @@ html { scroll-behavior: smooth; scroll-padding-top: 92px; }
   }
 }
 
+/* ---------- Mobile/tablet fix: stack hero + scroll cue instead of side-by-side ---------- */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+  .hero-grid {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .hero-bottom {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    margin-top: 34px;
+    padding-bottom: 0;
+  }
+  .hero-bottom span:first-child {
+    white-space: nowrap;
+  }
+}
