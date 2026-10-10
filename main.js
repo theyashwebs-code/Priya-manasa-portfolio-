@@ -12,7 +12,9 @@ const menuToggle=document.getElementById('menuToggle'),navLinks=document.getElem
 const dialog=document.getElementById('projectDialog');grid.addEventListener('click',e=>{const btn=e.target.closest('[data-project]');if(!btn)return;const p=projectData[Number(btn.dataset.project)];document.getElementById('dialogEyebrow').textContent=`${p.index} / ${p.sector}`;document.getElementById('dialogTitle').textContent=p.title;document.getElementById('dialogClient').textContent=`${p.client} · ${p.region}`;document.getElementById('dialogSummary').textContent=p.overview;document.getElementById('dialogFocus').innerHTML=p.focus.map(x=>`<li>${x}</li>`).join('');document.getElementById('dialogTech').innerHTML=p.tech.map(x=>`<span>${x}</span>`).join('');dialog.showModal()});document.getElementById('dialogClose').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
 document.getElementById('copyEmail').addEventListener('click',async()=>{const email='pmanasal196@gmail.com';try{await navigator.clipboard.writeText(email)}catch{const t=document.createElement('textarea');t.value=email;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}document.getElementById('copyFeedback').textContent='Email address copied: '+email;const btn=document.getElementById('copyEmail');btn.querySelector('span').textContent='Copied!';setTimeout(()=>{btn.querySelector('span').textContent='Copy Email';document.getElementById('copyFeedback').textContent=''},2200)});
 document.getElementById('year').textContent=new Date().getFullYear();const toTop=document.getElementById('toTop');window.addEventListener('scroll',()=>toTop.classList.toggle('visible',window.scrollY>500),{passive:true});toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
-const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');revealObserver.unobserve(entry.target)}}),{threshold:.08});document.querySelectorAll('.job-card,.expertise-card,.project-card,.award-row,.cert-card,.education-card').forEach(el=>{el.classList.add('reveal-item');revealObserver.observe(el)});
+const revealItems=document.querySelectorAll('.job-card,.expertise-card,.project-card,.award-row,.cert-card,.education-card');
+const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');revealObserver.unobserve(entry.target)}}),{threshold:.08,rootMargin:'0px 0px -3% 0px'});
+revealItems.forEach((el,index)=>{el.classList.add('reveal-item');el.style.setProperty('--reveal-delay',((index%4)*110)+'ms');revealObserver.observe(el)});
 
 /* ---- Mobile swipe rows: pagination dots + keyboard access ---- */
 (function(){
@@ -112,3 +114,17 @@ const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{i
   if(document.readyState==='complete') hide(); else window.addEventListener('load',hide);
   setTimeout(hide,5000);
 })();
+
+
+/* ---- Reliable smooth anchor navigation ---- */
+document.querySelectorAll('a[href^="#"]').forEach(function(link){
+  link.addEventListener('click',function(event){
+    var id=link.getAttribute('href').slice(1);
+    var target=document.getElementById(id);
+    if(!target)return;
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    event.preventDefault();
+    target.scrollIntoView({behavior:'smooth',block:'start'});
+    if(history.replaceState) history.replaceState(null,'','#'+id);
+  });
+});
